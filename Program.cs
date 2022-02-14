@@ -606,27 +606,30 @@ namespace ISM6225_Assignment_2_Spring_2022
                     while (q.Count > 0) //looping till matrix has any value
                     {          
                         
-                        for (int i = 0; i < q.Count; i++)   //looping till it has any value in queue
-                        {      
-                            var pnt = q.Dequeue();       
-                            int X = pnt.Item1;          
+                        for (int i = q.Count - 1; i >= 0; i--)   //looping till it has any value in queue
+                        {
+                            var pnt = q.Dequeue();
+                            int X = pnt.Item1;
                             int Y = pnt.Item2;
 
-                            if (X == size - 1 && Y == size - 1)  //check if we reach the end by changing flag to 1
-                            {  
+                            if (X != size - 1 || Y != size - 1)  //check if we reach the end by changing flag to 1
+                            {
+                                foreach (var d in dir)  //loop for all values in the queue
+                                {
+                                    int X1 = X + d[0];
+                                    int Y1 = Y + d[1];
+                                    if (X1 >= 0 && X1 < size && Y1 >= 0 && Y1 < size && !v[X1][Y1] && grid[X1, Y1] <= half)
+                                    {
+                                        q.Enqueue(Tuple.Create(X1, Y1));
+                                        v[X1][Y1] = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
                                 ispath = true;
                                 flag = 1;
                                 break;
-                            }
-                            foreach (var d in dir)  //loop for all values in the queue
-                            {   
-                                int X1 = X + d[0];
-                                int Y1 = Y + d[1];
-                                if (X1 >= 0 && X1 < size && Y1 >= 0 && Y1 < size && !v[X1][Y1] && grid[X1, Y1] <= half)
-                                {  
-                                    q.Enqueue(Tuple.Create(X1, Y1));  
-                                    v[X1][Y1] = true;     
-                                }
                             }
                         }
                         if (flag == 1)     
